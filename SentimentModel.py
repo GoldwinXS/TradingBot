@@ -12,7 +12,7 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 """ Dataset Setup """
 
 print('Preparing data.')
-dataset_path = "./input/Sentiment Analysis Dataset.csv"
+dataset_path = "Sentiment_Analysis_Dataset.csv"
 DATASET_ENCODING = "ISO-8859-1"
 input_length = 55
 
@@ -22,6 +22,7 @@ df = pd.read_csv(dataset_path,
                  encoding=DATASET_ENCODING,
                  dtype={"ItemID": int, "Sentiment": int, "SentimentSource": str, "SentimentText": str, },
                  warn_bad_lines=False, )
+
 dat_len = len(df)
 df = df[300000:800000]
 # docs = df["SentimentText"]
