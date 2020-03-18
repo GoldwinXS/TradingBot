@@ -10,6 +10,7 @@ register_matplotlib_converters()
 
 
 def plot_df(x_key, y_key_list, some_df, mark_keys=None, style=None):
+
     mark_keys = mark_keys
     styles = ['dark_background', 'ggplot', 'fivethirtyeight']
     colours = ['xkcd:steel blue', 'xkcd:emerald', 'xkcd:raspberry', 'xkcd:golden yellow', 'xkcd:dark green', 'y', 'k']
@@ -287,30 +288,10 @@ def live_plot(x_key, y_key_list, some_df, style=None, speed=0.1, dynamic_plot=Tr
         plt.pause(0.001)
 
 
-# class Stocks_V2(gym.env):
-#
-#     def __init__(self):
-#         pass
-#
-#     def seed(self, seed=None):
-#         self.np_random, seed = seeding.np_random(seed)
-#         return [seed]
-#
-#     def step(self, action):
-#         pass
-#
-#     def reset(self):
-#         pass
-#
-#     def render(self, mode='live', title=None, **kwargs):
-#         pass
-
-
-class glove_loader():
+class GloveLoader():
 
     def __init__(self, path):
         self.words = self.read_glove_model(path)
-
         self.exclude = set(r'$%&\()*+-/;<=>[\\]^_`{|}~')
 
     def read_glove_model(self, path):
@@ -412,8 +393,6 @@ class glove_loader():
         return self.one_hot_labels
 
     def convert_to_tensor(self, data):
-        # print((data.shape[0],))
-        # print(tuple([data.iloc[0].shape[0]]))
         shape = (data.shape[0],) + tuple([data.iloc[0].shape[0]])
         temp = np.zeros(shape)
         for i in range(len(data)):
@@ -429,29 +408,6 @@ class glove_loader():
 
         return temp
 
-    """ USAGE EXAMPLE """
-    # gd = glove_loader("./glove.twitter.27B/glove.twitter.27B.25d.txt")
-    #
-    # dataset_path = "./input/Sentiment Analysis Dataset.csv"
-    # DATASET_ENCODING = "ISO-8859-1"
-    # input_length = 30
-    # print("Opening file:", dataset_path)
-    # df = pd.read_csv(dataset_path,
-    #                  error_bad_lines=False,
-    #                  encoding=DATASET_ENCODING,
-    #                  dtype={"ItemID": int, "Sentiment": int, "SentimentSource": str, "SentimentText": str, },
-    #                  nrows=1000)
-    # print("Dataset size (number of tweets):", len(df))
-    #
-    # df = df[0:1000]
-    # tokenized = gd.tokenize_data(df["SentimentText"])
-    # print(tokenized)
-    # print(tokenized.to_list())
-    #
-    # print(df["Sentiment"])
-    # one_hot_labels = gd.create_one_hot_labels(df["Sentiment"],num_classes=2)
-    # print(one_hot_labels)
-    # print(one_hot_labels.to_list())
 
 
 # dataset_path = "./input/Sentiment Analysis Dataset.csv"
