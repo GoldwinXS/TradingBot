@@ -3,6 +3,9 @@
 
 This project is one of my first ML projects. It's a bit broken at the moment.
 
+When it is working, one  can see whatthe bot is thinking with the moving plot below
+![](img.png)
+
 ## Setup ##
 1. Download bitcoin data from:
 https://www.kaggle.com/mczielinski/bitcoin-historical-data
