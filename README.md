@@ -1,5 +1,5 @@
 
-#Trading Agent#
+# Trading Agent
 
 
 ## Setup ##
@@ -14,3 +14,8 @@ https://www.kaggle.com/mczielinski/bitcoin-historical-data
 
 5. Train Sentiment model by running SentimentModel.py
 
+6. Run TwitterScrape.py to grad some tweets
+
+7. Run TwitterAnalysis.py to get the sentiment model's inferences
+
+8. 

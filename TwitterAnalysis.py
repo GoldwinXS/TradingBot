@@ -2,9 +2,10 @@ from keras.models import load_model
 import tensorflow as tf
 import tkinter as tk
 from ProjectUtils import *
-from twitter_utils import *
+from TwitterUtils import *
 import os
 from pandas.plotting import register_matplotlib_converters
+from keras.preprocessing.sequence import pad_sequences
 
 register_matplotlib_converters()
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -13,7 +14,7 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # shut tensorflo
 """ SETUP """
 ##############
 
-padding = 55
+padding = 50
 dimensions = 100
 base_dir = ''
 
@@ -22,6 +23,7 @@ base_dir = ''
 
 bot = "sentiment_model.h5"  # path to file
 loaded_bot = load_model(base_dir+ bot)  # loaded bot object
+tokenizer = pd.read_pickle('tokenizer.pickle').values[0][0]
 
 print("Loading glove data.")
 gd = GloveLoader("glove.twitter.27B." + str(dimensions) + "d.txt")
@@ -37,24 +39,23 @@ def test_predict(single_sentence):
 
 
 def batch_predict(sentence_list):
-    print(sentence_list)
     prepared_sentences = []
     for sentence in sentence_list:
         prepared_sentences.append(gd.tokenize_sentence(sentence, pad=padding))
-    prepared_sentences = np.array(prepared_sentences)
+
+    prepared_sentences = tokenizer.texts_to_sequences(sentence_list)
+    paded_sequences = pad_sequences(prepared_sentences,50)
+    # prepared_sentences = np.array(prepared_sentences)
     # print(prepared_sentences)
-    try:
-        predictions = loaded_bot.predict(prepared_sentences)
+    predictions = loaded_bot.predict(paded_sequences)
 
-        temp = []
+    temp = []
 
-        for prediction in predictions:
-            temp.append(prediction[1])
-        predictions = temp
-        return predictions
+    for prediction in predictions:
+        temp.append(prediction[1])
+    predictions = temp
+    return predictions
 
-    except ValueError:
-        pass
 
 
 def predict_from_twitter(keyword, start, end, num_tweets, verbose=0):

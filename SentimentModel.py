@@ -32,6 +32,9 @@ tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
 tokenizer.fit_on_texts(texts)
 sequences = tokenizer.texts_to_sequences(texts)
 
+print('Saving tokenizer.')
+pd.DataFrame({'data':[tokenizer]}).to_pickle('tokenizer.pickle')
+
 word_index = tokenizer.word_index
 print('Found %s unique tokens.' % len(word_index))
 
