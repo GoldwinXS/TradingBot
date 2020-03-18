@@ -27,6 +27,7 @@ df = pd.read_csv('crypto_dat_v6.csv')
 
 # df['timestamp'] = df['dates']
 # df = df.drop('dates',axis=1)
+df.fillna(0)
 df = df[np.isfinite(df['Weighted_Price'])]
 
 neuron_multiplier = 10
@@ -60,6 +61,7 @@ class Stocks(gym.Env):
         input_columns = other_data_keys + self.price_keys + self.internal_tracking_keys
 
         self.df_inputs = pandas_df.reindex(columns=input_columns)
+
         # self.df_inputs = self.df_inputs.drop('Timestamp', axis=1)
 
         # print(self.df_inputs.columns)
@@ -102,6 +104,7 @@ class Stocks(gym.Env):
                         'xkcd:dark pink',
                         'xkcd:lighter green',
                         'xkcd:sea blue']
+        self.done = False
 
         """ START ENV """
         self.seed()
@@ -138,7 +141,7 @@ class Stocks(gym.Env):
         # 3. a punishment factor for not picking a new action
         # 4. a constant to shift the rewards into a range near 0 at the start
         # 5. a small bonus for making a new choice
-        self.reward = self.denorm(self.total_worth) / self.denorm(self.baseline_worth) + (self.denorm(self.bank) / self.denorm(self.random_balance)) - 1  # - np.exp(self.same_actions_counter * 0.01) + 1
+        self.reward = 0# self.denorm(self.total_worth) / self.denorm(self.baseline_worth) + (self.denorm(self.bank) / self.denorm(self.random_balance)) - 1  # - np.exp(self.same_actions_counter * 0.01) + 1
         # if self.same_actions_counter ==0:
         #     self.reward +=  np.exp(0.1)
         # print(' same action = ', self.same_actions_counter )
@@ -164,13 +167,14 @@ class Stocks(gym.Env):
         """ ADD INTERNAL DATA TO NEXT INPUT """
 
         self.state = self.inputs[self.step_index]
-        self.assess_if_done()
-        self.save()
+        # self.assess_if_done()
+        # self.save()
 
         return self.state, self.reward, self.done, {}
 
     def reset(self):
-        return self.new_start()
+        self.new_start()
+        return self.state
 
     def render(self, mode='live', title=None, **kwargs):
 
@@ -205,11 +209,12 @@ class Stocks(gym.Env):
         #     self.done = True
 
     def new_start(self):
-        self.step_index = np.random.randint(0, training_stop_index)
+        self.step_index = 0# np.random.randint(0, training_stop_index)
         self.start_index = self.render_index = self.step_index
-        self.random_balance = np.random.randint(100, 2000)
+        self.random_balance = np.random.randint(1000, 20000)
         money_frac = np.random.random(1)[0]
         coin_frac = 1 - money_frac
+        print('A new Start')
 
         self.initial_balance = self.random_balance * money_frac  # 10000  # self.df_inputs[self.price_keys[0]][self.step_index+3]  # - 2300
 
@@ -239,7 +244,7 @@ class Stocks(gym.Env):
         self.state = self.inputs[self.step_index]
         self.update_internal_data()
 
-        return self.state
+        # return self.state
 
     def update_internal_data(self):
         self.total_worth = self.norm(self.denorm(self.balance) + self.denorm(self.coin_values.sum()))
@@ -392,7 +397,7 @@ class Stocks(gym.Env):
 
         # print('totl steps = ',self.total_step_counter)
         if self.total_step_counter % save_on_step == 0 and self.total_step_counter > 0:
-            agent.save_weights('models/ddpg/{}_weights.h5f'.format(ENV_NAME), overwrite=True)
+            agent.save_weights('{}_weights.h5'.format(ENV_NAME), overwrite=True)
 
 
 # def make_model_and_stuff():

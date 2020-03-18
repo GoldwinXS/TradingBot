@@ -1,6 +1,7 @@
 
 # Trading Agent
 
+This project is one of my first ML projects. It's a bit broken at the moment.
 
 ## Setup ##
 1. Download bitcoin data from:
@@ -18,4 +19,7 @@ https://www.kaggle.com/mczielinski/bitcoin-historical-data
 
 7. Run TwitterAnalysis.py to get the sentiment model's inferences
 
-8. 
+8. Run DataAnalysis.py to get the data needed to run the reinforcement learning agent
+
+9. Train the TradingAgent by running TradingAgent.py
+
