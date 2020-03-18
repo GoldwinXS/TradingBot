@@ -1,3 +1,4 @@
+from keras.models import load_model
 import tensorflow as tf
 import tkinter as tk
 from ProjectUtils import *
@@ -14,15 +15,16 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # shut tensorflo
 
 padding = 55
 dimensions = 100
+base_dir = ''
 
 ##############
 
 
 bot = "sentiment_model.h5"  # path to file
-loaded_bot = tf.keras.models.load_model("models/" + bot)  # loaded bot object
+loaded_bot = load_model(base_dir+ bot)  # loaded bot object
 
 print("Loading glove data.")
-gd = GloveLoader("./glove.twitter.27B/glove.twitter.27B." + str(dimensions) + "d.txt")
+gd = GloveLoader("glove.twitter.27B." + str(dimensions) + "d.txt")
 
 
 def test_predict(single_sentence):
@@ -35,7 +37,7 @@ def test_predict(single_sentence):
 
 
 def batch_predict(sentence_list):
-    # print(sentence_list)
+    print(sentence_list)
     prepared_sentences = []
     for sentence in sentence_list:
         prepared_sentences.append(gd.tokenize_sentence(sentence, pad=padding))
@@ -157,9 +159,9 @@ edate = '2018-02-01'
 # results = predict_from_twitter(target_keyword, sdate,edate, num_tweets=100, verbose=2)
 # results.to_csv(str(target_keyword)+'_ave100tweets.csv')
 
-infile = 'tweets_bitcoin feel_200_daily'
+infile = 'tweets_bitcoin_100_daily'
 
-in_df = pd.read_pickle('tweets/{}.pickle'.format(infile))
+in_df = pd.read_pickle(base_dir+'{}.pickle'.format(infile))
 
 for i in range(len(in_df)):
 
@@ -168,7 +170,7 @@ for i in range(len(in_df)):
         print('OMG, LOOK ITS NAN')
 
 results = predict_from_saved_df(in_df, verbose=1)
-results.to_pickle('data/{}_data_analysis.pickle'.format(infile))
+results.to_pickle(base_dir+'{}_data_analysis.pickle'.format(infile))
 
 
 class App:

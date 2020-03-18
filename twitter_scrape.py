@@ -4,13 +4,12 @@ import time
 
 
 day_amt = 10
-daily_tweet_amt = 1000
+daily_tweet_amt = 100
 keyword = 'bitcoin'
-script_repetitions = 500
-wait_time = 10
+script_repetitions = 10
+wait_time = 1
 file_start_date = '2013-01-01'
-
-
+base_dir = ''
 file = 'tweets'+'_'+keyword+'_'+str(daily_tweet_amt)+"_daily"+'.pickle'
 total_tweets = day_amt*daily_tweet_amt*script_repetitions
 
@@ -21,8 +20,8 @@ for i in range(script_repetitions):
     first_load = False
     print(return_percent(i+1, script_repetitions, 'Scraped')+'  Remaining tweets: '+str(total_tweets-(day_amt*(i+1)*daily_tweet_amt))+'  Total taken: ~' + str(day_amt*(i+1)*daily_tweet_amt))
 
-    if os.path.isfile('tweets/'+file):
-        loaded_df = pd.read_pickle('tweets/'+file)
+    if os.path.isfile(base_dir+file):
+        loaded_df = pd.read_pickle(base_dir+file)
         first_date = loaded_df['dates'].iloc[len(loaded_df) - 1]
 
     else:
@@ -50,10 +49,10 @@ for i in range(script_repetitions):
     if not first_load:
         save_df = pd.DataFrame({'dates': dates, 'tweets': tweets_list_str})
         loaded_df = pd.concat((loaded_df, save_df), axis=0, sort=False, ignore_index=True)
-        loaded_df.to_pickle('tweets/'+file,)
+        loaded_df.to_pickle(base_dir+file,)
     else:
         save_df = pd.DataFrame({'dates': dates, 'tweets': tweets_list_str})
-        save_df.to_pickle('tweets/'+file)
+        save_df.to_pickle(base_dir+file)
 
 
     time.sleep(wait_time)
